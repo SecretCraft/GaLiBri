@@ -1,0 +1,5 @@
+name: GaLiBri
+main: de.secretcraft.galibri.GalibriPlugin
+version: 0.0.1
+author: sascha thiel
+description: Gate, Lift and Bridge functionality
