@@ -1,6 +1,8 @@
 package de.secretcraft.galibri;
 
-public class GalibriPlugin
+import org.bukkit.plugin.java.JavaPlugin;
+
+public class GalibriPlugin extends JavaPlugin
 {
 	
 }
