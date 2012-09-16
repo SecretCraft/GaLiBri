@@ -10,7 +10,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import de.secretcraft.galibri.GalibriPlugin;
-import de.secretcraft.galibri.mechanic.IMechanic;
+import de.secretcraft.galibri.mechanic.AbstractMechanic;
 import de.secretcraft.galibri.mechanic.MechanicFactory;
 
 /**
@@ -36,7 +36,7 @@ public class SignListener implements Listener
 	@EventHandler(priority=EventPriority.NORMAL)
 	public void onSignChange(SignChangeEvent event)
 	{
-		IMechanic mech = MechanicFactory.getMechanic(event.getLine(1), plugin);
+		AbstractMechanic mech = MechanicFactory.getMechanic(event.getLine(1), plugin);
 		if(mech != null){
 			mech.initialize(event);
 		}
@@ -55,7 +55,7 @@ public class SignListener implements Listener
 		
 		Sign sign = (Sign) event.getClickedBlock().getState();
 		
-		IMechanic mech = MechanicFactory.getMechanic(sign.getLine(1), plugin);
+		AbstractMechanic mech = MechanicFactory.getMechanic(sign.getLine(1), plugin);
 		if(mech != null){
 			mech.doAction(sign, event.getPlayer());
 		}

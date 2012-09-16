@@ -1,5 +1,7 @@
 package de.secretcraft.galibri.mechanic;
 
+import java.util.logging.Logger;
+
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
@@ -11,33 +13,33 @@ import de.secretcraft.galibri.GalibriPlugin;
  * 
  * @author sascha thiel
  */
-public class Gate extends AbstractMechanic
+public abstract class AbstractMechanic
 {
 	//---------------------------------------------------------------------------------------------
 	
-	
+	protected GalibriPlugin plugin;
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public Gate(GalibriPlugin plugin)
+	public AbstractMechanic(GalibriPlugin plugin)
 	{
-		super(plugin);
+		this.plugin = plugin;
 	}
 	
 	//---------------------------------------------------------------------------------------------
-	@Override
-	public void initialize(SignChangeEvent event)
+	
+	protected Logger getLogger()
 	{
-		Player player = event.getPlayer();
-		player.sendMessage("Gate => initialize "+ player.getName());
+		return plugin.getLogger();
 	}
 	
 	//---------------------------------------------------------------------------------------------
-	@Override
-	public void doAction(Sign sign, Player player) 
-	{
-		player.sendMessage("Gate => doAction "+ player.getName());
-	}
+	// abstract
+	//---------------------------------------------------------------------------------------------
+	
+	public abstract void initialize(SignChangeEvent event);
+
+	public abstract void doAction(Sign sign, Player player);
 	
 	//---------------------------------------------------------------------------------------------
 }

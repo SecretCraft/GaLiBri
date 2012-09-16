@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import de.secretcraft.galibri.GalibriPlugin;
 
 /**
- * 
+ * Creates new mechanics depends on the second line of the sign
  * 
  * @author sascha thiel
  */
@@ -14,7 +14,7 @@ public class MechanicFactory
 {
 	//---------------------------------------------------------------------------------------------
 	
-	public static IMechanic getMechanic(String cmdLine, GalibriPlugin plugin)
+	public static AbstractMechanic getMechanic(String cmdLine, GalibriPlugin plugin)
 	{
 		Pattern p = Pattern.compile("(?:^\\[)(.*)(?:\\]$)");
 		Matcher m = p.matcher(cmdLine);

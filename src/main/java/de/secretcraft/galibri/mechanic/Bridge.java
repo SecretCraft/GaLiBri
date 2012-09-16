@@ -11,17 +11,17 @@ import de.secretcraft.galibri.GalibriPlugin;
  * 
  * @author sascha thiel
  */
-public class Bridge implements IMechanic
+public class Bridge extends AbstractMechanic
 {
 	//---------------------------------------------------------------------------------------------
 	
-	private GalibriPlugin plugin;
+
 	
 	//---------------------------------------------------------------------------------------------
 	
 	public Bridge(GalibriPlugin plugin)
 	{
-		this.plugin = plugin;
+		super(plugin);
 	}
 	
 	//---------------------------------------------------------------------------------------------
