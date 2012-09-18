@@ -20,9 +20,9 @@ public class MechanicFactory
 		Matcher m = p.matcher(cmdLine);
 		if(m.matches()){
 			String value = m.group(1).toLowerCase();
-			if(value.equalsIgnoreCase("lift up") || value.equalsIgnoreCase("lift down")) return new Lift(plugin);
-			else if(value.equalsIgnoreCase("gate")) return new Gate(plugin);
-			else if(value.equalsIgnoreCase("bridge")) return new Bridge(plugin);
+			if(value.contains("lift")) return new Lift(plugin);
+			else if(value.equals("gate")) return new Gate(plugin);
+			else if(value.equals("bridge")) return new Bridge(plugin);
 		}
 		return null;
 	}

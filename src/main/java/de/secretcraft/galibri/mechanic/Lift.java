@@ -1,5 +1,7 @@
 package de.secretcraft.galibri.mechanic;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -10,18 +12,15 @@ import org.bukkit.event.block.SignChangeEvent;
 import de.secretcraft.galibri.GalibriPlugin;
 
 /**
- * 
+ * This class handles all Lift sign that will be created
  * 
  * @author sascha thiel
  */
 public class Lift extends AbstractMechanic
 {
 	//---------------------------------------------------------------------------------------------
+
 	
-	public static enum Direction
-	{
-		UP, DOWN, NONE;
-	}
 	
 	//---------------------------------------------------------------------------------------------
 	
@@ -41,7 +40,7 @@ public class Lift extends AbstractMechanic
 			break;
 			case DOWN: event.setLine(1, "[Lift Down]");
 			break;
-			default: // NOTE: STH do nothing
+			default: event.setLine(1, "[Lift]");
 		}
 		player.sendMessage(event.getLine(1) + " sign created");
 	}
@@ -63,19 +62,22 @@ public class Lift extends AbstractMechanic
 			return;
 		}
 		
-		player.sendMessage("if this where implemented you would be ported");
-		Block currentBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-		
-		// TODO: check if the player can be ported without damage
+		try{
+			Location location = getTeleportLocation(player.getLocation(), sign.getY() - destSign.getY());
+			player.teleport(location);
+		}
+		catch(Exception e){
+			player.sendMessage(e.getMessage());
+		}
 	}
 	
 	//---------------------------------------------------------------------------------------------
-	
+
 	private BlockFace getDirection(final String line)
 	{
 		if(line.toLowerCase().contains("up")) return BlockFace.UP;
 		else if(line.toLowerCase().contains("down")) return BlockFace.DOWN;
-		return null;
+		return BlockFace.SELF;
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -107,6 +109,56 @@ public class Lift extends AbstractMechanic
 			}
 		}
 		return destSign;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private Location getTeleportLocation(Location currentLocation, int yOffset) throws Exception
+	{
+		Block destBlock = getFloor(currentLocation.getWorld().getBlockAt(currentLocation.add(0, yOffset, 0)).getRelative(BlockFace.DOWN));
+		if(destBlock == null){
+			throw new Exception("no floor was found");
+		}
+		if(!isFreeArea(destBlock)){
+			throw new Exception("there is not enough space for you");
+		}
+		return new Location(currentLocation.getWorld(), currentLocation.getX(), destBlock.getRelative(BlockFace.UP).getY(), currentLocation.getZ());
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private boolean isFreeArea(Block block)
+	{
+		for(int i=0;i<2;++i){
+			block = block.getRelative(BlockFace.UP);
+			if(block.getType() != Material.AIR) return false;
+		}
+		return true;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private Block getFloor(Block block)
+	{
+		Block back = null;
+		for(int i = 0; i<3; ++i){
+			if(isMassive(block)){
+				back = block;
+				break;
+			}
+			block = block.getRelative(BlockFace.DOWN);
+		}
+		return back;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private boolean isMassive(Block block)
+	{
+		// TODO: STH fill up with massive materials
+		Material mat = block.getType();
+		return mat == Material.STONE || mat == Material.WOOD || mat == Material.SAND || mat == Material.SANDSTONE ||
+				mat == Material.BEDROCK || mat == Material.BRICK;
 	}
 	
 	//---------------------------------------------------------------------------------------------
