@@ -24,17 +24,18 @@ public class Lift extends AbstractMechanic
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public Lift(GalibriPlugin plugin)
+	public Lift(final GalibriPlugin plugin)
 	{
 		super(plugin);
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	@Override
-	public void initialize(SignChangeEvent event)
+	public void initialize(final SignChangeEvent event)
 	{
-		Player player = event.getPlayer();
-		BlockFace direct = getDirection(event.getLine(1));
+		// TODO: STH check permission
+		final Player player = event.getPlayer();
+		final BlockFace direct = getDirection(event.getLine(1));
 		switch(direct) {
 			case UP: event.setLine(1, "[Lift Up]");
 			break;
@@ -47,10 +48,11 @@ public class Lift extends AbstractMechanic
 	
 	//---------------------------------------------------------------------------------------------
 	@Override
-	public void doAction(Sign sign, Player player)
+	public void doAction(final Sign sign, final Player player)
 	{
-		BlockFace face = getDirection(sign.getLine(1));
-		if(face == null) {
+		// TODO: STH check permission
+		final BlockFace face = getDirection(sign.getLine(1));
+		if(face == BlockFace.SELF) {
 			// TODO: STH localize
 			player.sendMessage("You can't departure from this sign");
 			return;
@@ -63,7 +65,9 @@ public class Lift extends AbstractMechanic
 		}
 		
 		try{
-			Location location = getTeleportLocation(player.getLocation(), sign.getY() - destSign.getY());
+			Location location = player.getLocation();
+			location.setY(destSign.getY());
+			location = getTeleportLocation(location);
 			player.teleport(location);
 		}
 		catch(Exception e){
@@ -82,14 +86,14 @@ public class Lift extends AbstractMechanic
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private boolean isLiftSign(Sign sign)
+	private boolean isLiftSign(final Sign sign)
 	{
 		return sign.getLine(1).toLowerCase().contains("lift");
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private Sign searchForSign(BlockFace face, Sign startSign)
+	private Sign searchForSign(final BlockFace face, final Sign startSign)
 	{
 		Block destBlock = startSign.getBlock();
 		Sign destSign = null;
@@ -113,16 +117,17 @@ public class Lift extends AbstractMechanic
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private Location getTeleportLocation(Location currentLocation, int yOffset) throws Exception
+	private Location getTeleportLocation(final Location location) throws Exception
 	{
-		Block destBlock = getFloor(currentLocation.getWorld().getBlockAt(currentLocation.add(0, yOffset, 0)).getRelative(BlockFace.DOWN));
+		Block destBlock = getFloor(location.getBlock().getRelative(BlockFace.DOWN));
 		if(destBlock == null){
 			throw new Exception("no floor was found");
 		}
 		if(!isFreeArea(destBlock)){
 			throw new Exception("there is not enough space for you");
 		}
-		return new Location(currentLocation.getWorld(), currentLocation.getX(), destBlock.getRelative(BlockFace.UP).getY(), currentLocation.getZ());
+		location.setY(destBlock.getRelative(BlockFace.UP).getY());
+		return location;
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -153,12 +158,12 @@ public class Lift extends AbstractMechanic
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private boolean isMassive(Block block)
+	private boolean isMassive(final Block block)
 	{
 		// TODO: STH fill up with massive materials
 		Material mat = block.getType();
 		return mat == Material.STONE || mat == Material.WOOD || mat == Material.SAND || mat == Material.SANDSTONE ||
-				mat == Material.BEDROCK || mat == Material.BRICK;
+				mat == Material.BEDROCK || mat == Material.BRICK || mat == Material.COBBLESTONE;
 	}
 	
 	//---------------------------------------------------------------------------------------------

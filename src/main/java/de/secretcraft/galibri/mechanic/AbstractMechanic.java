@@ -21,7 +21,7 @@ public abstract class AbstractMechanic
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public AbstractMechanic(GalibriPlugin plugin)
+	public AbstractMechanic(final GalibriPlugin plugin)
 	{
 		this.plugin = plugin;
 	}
@@ -37,9 +37,9 @@ public abstract class AbstractMechanic
 	// abstract
 	//---------------------------------------------------------------------------------------------
 	
-	public abstract void initialize(SignChangeEvent event);
+	public abstract void initialize(final SignChangeEvent event);
 
-	public abstract void doAction(Sign sign, Player player);
+	public abstract void doAction(final Sign sign, final Player player);
 	
 	//---------------------------------------------------------------------------------------------
 }
