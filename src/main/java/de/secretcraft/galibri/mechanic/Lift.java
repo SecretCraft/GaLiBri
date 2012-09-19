@@ -134,6 +134,7 @@ public class Lift extends AbstractMechanic
 	
 	private boolean isFreeArea(Block block)
 	{
+		// NOTE: STH search for free area to port the player
 		for(int i=0;i<2;++i){
 			block = block.getRelative(BlockFace.UP);
 			if(block.getType() != Material.AIR) return false;
@@ -145,6 +146,7 @@ public class Lift extends AbstractMechanic
 	
 	private Block getFloor(Block block)
 	{
+		// NOTE: STH search for the floor 3 blocks downwards 
 		Block back = null;
 		for(int i = 0; i<3; ++i){
 			if(isMassive(block)){
