@@ -1,5 +1,6 @@
 package de.secretcraft.galibri.mechanic;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -33,8 +34,12 @@ public class Lift extends AbstractMechanic
 	@Override
 	public void initialize(final SignChangeEvent event)
 	{
-		// TODO: STH check permission
 		final Player player = event.getPlayer();
+		if(!player.hasPermission("lift.create")){
+			// TODO: STH localize
+			player.sendMessage(ChatColor.RED + "You don't have permissions to do that");
+			return;
+		}
 		final BlockFace direct = getDirection(event.getLine(1));
 		switch(direct) {
 			case UP: event.setLine(1, "[Lift Up]");
@@ -50,11 +55,14 @@ public class Lift extends AbstractMechanic
 	@Override
 	public void doAction(final Sign sign, final Player player)
 	{
-		// TODO: STH check permission
+		if(!player.hasPermission("lift.use")){
+			player.sendMessage(ChatColor.RED + "You don't have permissions to do that");
+			return;
+		}
 		final BlockFace face = getDirection(sign.getLine(1));
 		if(face == BlockFace.SELF) {
 			// TODO: STH localize
-			player.sendMessage("You can't departure from this sign");
+			player.sendMessage(ChatColor.RED + "You can't departure from this sign");
 			return;
 		}
 		Sign destSign = searchForSign(face, sign);

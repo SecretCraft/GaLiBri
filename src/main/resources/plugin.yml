@@ -3,3 +3,10 @@ main: de.secretcraft.galibri.GalibriPlugin
 version: 0.0.1
 author: sascha thiel
 description: Gate, Lift and Bridge functionality
+permissions:
+  lift.use:
+    default: true
+    description: use lift sign
+  lift.create
+    default: true
+    description: create lift sign

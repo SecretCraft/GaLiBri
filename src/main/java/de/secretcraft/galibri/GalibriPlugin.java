@@ -17,6 +17,7 @@ public class GalibriPlugin extends JavaPlugin
 	@Override
 	public void onEnable()
 	{
+		reloadConfig();
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new SignListener(this), this);
 	}
