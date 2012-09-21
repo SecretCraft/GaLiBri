@@ -28,18 +28,16 @@ public class Lift extends AbstractMechanic
 	public Lift(final GalibriPlugin plugin)
 	{
 		super(plugin);
+		permissions.put(Perm.INITIALIZE, "lift.create");
+		permissions.put(Perm.DO_ACTION, "lift.use");
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	@Override
-	public void initialize(final SignChangeEvent event)
+	public boolean initialize(final SignChangeEvent event)
 	{
+		if(!super.initialize(event)) return false;
 		final Player player = event.getPlayer();
-		if(!player.hasPermission("lift.create")){
-			// TODO: STH localize
-			player.sendMessage(ChatColor.RED + "You don't have permissions to do that");
-			return;
-		}
 		final BlockFace direct = getDirection(event.getLine(1));
 		switch(direct) {
 			case UP: event.setLine(1, "[Lift Up]");
@@ -49,27 +47,25 @@ public class Lift extends AbstractMechanic
 			default: event.setLine(1, "[Lift]");
 		}
 		player.sendMessage(event.getLine(1) + " sign created");
+		return true;
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	@Override
-	public void doAction(final Sign sign, final Player player)
+	public boolean doAction(final Sign sign, final Player player)
 	{
-		if(!player.hasPermission("lift.use")){
-			player.sendMessage(ChatColor.RED + "You don't have permissions to do that");
-			return;
-		}
+		if(!super.doAction(sign, player)) return false;
 		final BlockFace face = getDirection(sign.getLine(1));
 		if(face == BlockFace.SELF) {
 			// TODO: STH localize
 			player.sendMessage(ChatColor.RED + "You can't departure from this sign");
-			return;
+			return false;
 		}
 		Sign destSign = searchForSign(face, sign);
 		if(destSign == null){
 			// TODO: STH localize
 			player.sendMessage("no destination sign found");
-			return;
+			return false;
 		}
 		
 		try{
@@ -81,6 +77,7 @@ public class Lift extends AbstractMechanic
 		catch(Exception e){
 			player.sendMessage(e.getMessage());
 		}
+		return true;
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -129,9 +126,11 @@ public class Lift extends AbstractMechanic
 	{
 		Block destBlock = getFloor(location.getBlock().getRelative(BlockFace.DOWN));
 		if(destBlock == null){
+			// TODO: STH localize
 			throw new Exception("no floor was found");
 		}
 		if(!isFreeArea(destBlock)){
+			// TODO: STH localize
 			throw new Exception("there is not enough space for you");
 		}
 		location.setY(destBlock.getRelative(BlockFace.UP).getY());
@@ -145,7 +144,8 @@ public class Lift extends AbstractMechanic
 		// NOTE: STH search for free area to port the player
 		for(int i=0;i<2;++i){
 			block = block.getRelative(BlockFace.UP);
-			if(block.getType() != Material.AIR) return false;
+			Material mat = block.getType();
+			if(mat != Material.AIR && mat != Material.SIGN && mat != Material.SIGN_POST && mat != Material.WALL_SIGN) return false;
 		}
 		return true;
 	}
@@ -170,10 +170,15 @@ public class Lift extends AbstractMechanic
 	
 	private boolean isMassive(final Block block)
 	{
-		// TODO: STH fill up with massive materials
+		// NOTE: STH if something is missing please add
 		Material mat = block.getType();
 		return mat == Material.STONE || mat == Material.WOOD || mat == Material.SAND || mat == Material.SANDSTONE ||
-				mat == Material.BEDROCK || mat == Material.BRICK || mat == Material.COBBLESTONE;
+				mat == Material.BEDROCK || mat == Material.BRICK || mat == Material.COBBLESTONE || mat == Material.WOOL ||
+				mat == Material.DIRT || mat == Material.EMERALD_BLOCK || mat == Material.EMERALD_ORE || mat == Material.GLASS ||
+				mat == Material.GLOWSTONE || mat == Material.GOLD_BLOCK || mat == Material.GOLD_ORE || mat == Material.GRASS ||
+				mat == Material.GRAVEL || mat == Material.ICE || mat == Material.IRON_BLOCK || mat == Material.IRON_ORE ||
+				mat == Material.LAPIS_BLOCK || mat == Material.LAPIS_ORE || mat == Material.NETHER_BRICK || mat == Material.NETHERRACK ||
+				mat == Material.OBSIDIAN || mat == Material.REDSTONE_ORE || mat == Material.SNOW_BLOCK || mat == Material.SOUL_SAND;
 	}
 	
 	//---------------------------------------------------------------------------------------------

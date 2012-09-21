@@ -33,7 +33,7 @@ public class SignListener implements Listener
 	
 	//---------------------------------------------------------------------------------------------
 	
-	@EventHandler(priority=EventPriority.NORMAL)
+	@EventHandler(priority=EventPriority.MONITOR)
 	public void onSignChange(SignChangeEvent event)
 	{
 		AbstractMechanic mech = MechanicFactory.getMechanic(event.getLine(1), plugin);
@@ -44,7 +44,7 @@ public class SignListener implements Listener
 	
 	//---------------------------------------------------------------------------------------------
 	
-	@EventHandler(priority=EventPriority.NORMAL)
+	@EventHandler(priority=EventPriority.MONITOR)
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
 		Material mat = event.getClickedBlock().getType();

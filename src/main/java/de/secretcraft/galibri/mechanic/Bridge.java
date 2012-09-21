@@ -26,17 +26,25 @@ public class Bridge extends AbstractMechanic
 	
 	//---------------------------------------------------------------------------------------------
 	@Override
-	public void initialize(SignChangeEvent event)
+	public boolean initialize(SignChangeEvent event)
 	{
+		if(!super.initialize(event)) return false;
+		
 		Player player = event.getPlayer();
 		player.sendMessage("Bridge => initialize "+ player.getName());
+		
+		return true;
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	@Override
-	public void doAction(Sign sign, Player player)
+	public boolean doAction(Sign sign, Player player)
 	{
+		if(!super.doAction(sign, player)) return false;
+		
 		player.sendMessage("Bridge => doAction "+ player.getName());
+		
+		return true;
 	}
 	
 	//---------------------------------------------------------------------------------------------
