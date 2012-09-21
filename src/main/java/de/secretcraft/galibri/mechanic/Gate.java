@@ -22,6 +22,8 @@ public class Gate extends AbstractMechanic
 	public Gate(GalibriPlugin plugin)
 	{
 		super(plugin);
+		permissions.put(Perm.INITIALIZE, "gate.create");
+		permissions.put(Perm.DO_ACTION, "gate.use");
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -29,10 +31,9 @@ public class Gate extends AbstractMechanic
 	public boolean initialize(SignChangeEvent event)
 	{
 		if(!super.initialize(event)) return false;
-		
-		Player player = event.getPlayer();
-		player.sendMessage("Gate => initialize "+ player.getName());
-		
+		final Player player = event.getPlayer();
+		event.setLine(1, "[Gate]");
+		player.sendMessage(event.getLine(1) + " sign created");
 		return true;
 	}
 	
