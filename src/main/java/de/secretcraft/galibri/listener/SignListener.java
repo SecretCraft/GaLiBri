@@ -33,9 +33,10 @@ public class SignListener implements Listener
 	
 	//---------------------------------------------------------------------------------------------
 	
-	@EventHandler(priority=EventPriority.MONITOR)
+	@EventHandler(priority=EventPriority.NORMAL)
 	public void onSignChange(SignChangeEvent event)
 	{
+		if(event.isCancelled()) return;
 		AbstractMechanic mech = MechanicFactory.getMechanic(event.getLine(1), plugin);
 		if(mech != null){
 			mech.initialize(event);
@@ -44,14 +45,16 @@ public class SignListener implements Listener
 	
 	//---------------------------------------------------------------------------------------------
 	
-	@EventHandler(priority=EventPriority.MONITOR)
+	@EventHandler(priority=EventPriority.NORMAL)
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
-		Material mat = event.getClickedBlock().getType();
-		Action action = event.getAction();
+		if(event.getClickedBlock() == null || event.isCancelled()) return;
 		
-		if(!(mat == Material.SIGN || mat == Material.SIGN_POST || mat == Material.WALL_SIGN)) return;
+		Action action = event.getAction();		
 		if(action != Action.RIGHT_CLICK_BLOCK) return;
+		
+		Material mat = event.getClickedBlock().getType();
+		if(!(mat == Material.SIGN || mat == Material.SIGN_POST || mat == Material.WALL_SIGN)) return;
 		
 		Sign sign = (Sign) event.getClickedBlock().getState();
 		

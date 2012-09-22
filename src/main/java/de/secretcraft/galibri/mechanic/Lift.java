@@ -127,7 +127,7 @@ public class Lift extends AbstractMechanic
 		Block destBlock = getFloor(location.getBlock().getRelative(BlockFace.DOWN));
 		if(destBlock == null){
 			// TODO: STH localize
-			throw new Exception("no floor was found");
+			throw new Exception("no floor found");
 		}
 		if(!isFreeArea(destBlock)){
 			// TODO: STH localize
@@ -178,7 +178,8 @@ public class Lift extends AbstractMechanic
 				mat == Material.GLOWSTONE || mat == Material.GOLD_BLOCK || mat == Material.GOLD_ORE || mat == Material.GRASS ||
 				mat == Material.GRAVEL || mat == Material.ICE || mat == Material.IRON_BLOCK || mat == Material.IRON_ORE ||
 				mat == Material.LAPIS_BLOCK || mat == Material.LAPIS_ORE || mat == Material.NETHER_BRICK || mat == Material.NETHERRACK ||
-				mat == Material.OBSIDIAN || mat == Material.REDSTONE_ORE || mat == Material.SNOW_BLOCK || mat == Material.SOUL_SAND;
+				mat == Material.OBSIDIAN || mat == Material.REDSTONE_ORE || mat == Material.SNOW_BLOCK || mat == Material.SOUL_SAND ||
+				mat == Material.DOUBLE_STEP;
 	}
 	
 	//---------------------------------------------------------------------------------------------
