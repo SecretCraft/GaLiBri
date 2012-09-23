@@ -11,7 +11,7 @@ import de.secretcraft.galibri.listener.SignListener;
  * @author sascha thiel
  */
 public class GalibriPlugin extends JavaPlugin
-{
+{	
 	//---------------------------------------------------------------------------------------------
 	
 	@Override
