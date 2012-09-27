@@ -104,11 +104,11 @@ public class Gate extends AbstractMechanic
 			boolean end = false;
 			while(!end) {
 				block = block.getRelative(BlockFace.DOWN);
-				if(block.getType() == Material.AIR){
+				if(block.getType() == Material.AIR) {
 					block.setType(gateMat);
 				} else if(block.getType() == gateMat) {
 					block.setType(Material.AIR);
-				}else {
+				} else {
 					end = true;
 				}
 			}

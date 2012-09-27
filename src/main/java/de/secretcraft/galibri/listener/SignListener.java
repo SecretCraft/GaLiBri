@@ -50,7 +50,7 @@ public class SignListener implements Listener
 	{
 		if(event.getClickedBlock() == null || event.isCancelled()) return;
 		
-		Action action = event.getAction();		
+		Action action = event.getAction();
 		if(action != Action.RIGHT_CLICK_BLOCK) return;
 		
 		Material mat = event.getClickedBlock().getType();
