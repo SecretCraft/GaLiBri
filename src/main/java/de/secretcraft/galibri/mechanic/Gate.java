@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -58,6 +59,8 @@ public class Gate extends AbstractMechanic
 			return false;
 		}
 		
+		toggleGate(topBlocks);
+		
 		return true;
 	}
 	
@@ -96,8 +99,20 @@ public class Gate extends AbstractMechanic
 	
 	protected void toggleGate(List<Block> topBlocks)
 	{
-		Material mat = topBlocks.get(0).getType();
-		
+		Material gateMat = topBlocks.get(0).getType();
+		for(Block block : topBlocks){
+			boolean end = false;
+			while(!end) {
+				block = block.getRelative(BlockFace.DOWN);
+				if(block.getType() == Material.AIR){
+					block.setType(gateMat);
+				} else if(block.getType() == gateMat) {
+					block.setType(Material.AIR);
+				}else {
+					end = true;
+				}
+			}
+		}
 	}
 	
 	//---------------------------------------------------------------------------------------------
