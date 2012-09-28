@@ -13,7 +13,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import de.secretcraft.galibri.GalibriPlugin;
 
 /**
- * This class handles all Lift sign that will be created
+ * This class handles all Lift signs that will be created
  * 
  * @author sascha thiel
  */

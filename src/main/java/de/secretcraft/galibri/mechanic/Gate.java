@@ -16,7 +16,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import de.secretcraft.galibri.GalibriPlugin;
 
 /**
- * 
+ * This class handles all Gate signs that will be created
  * 
  * @author sascha thiel
  */
@@ -89,7 +89,7 @@ public class Gate extends AbstractMechanic
 					}
 				}
 			}
-			// do not search next area if gate block was found
+			// do not search in the next area if a gate block was found
 			if(foundGateBlock) break;
 		}		
 		return back;
