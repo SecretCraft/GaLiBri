@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 
 import de.secretcraft.galibri.GalibriPlugin;
+import de.secretcraft.galibri.mechanic.AbstractMechanic.Perm;
 
 /**
  * 
@@ -22,6 +23,8 @@ public class Bridge extends AbstractMechanic
 	public Bridge(GalibriPlugin plugin)
 	{
 		super(plugin);
+		permissions.put(Perm.INITIALIZE, "bridge.create");
+		permissions.put(Perm.DO_ACTION, "bridge.use");
 	}
 	
 	//---------------------------------------------------------------------------------------------

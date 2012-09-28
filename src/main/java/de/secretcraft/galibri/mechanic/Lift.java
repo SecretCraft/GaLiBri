@@ -28,8 +28,8 @@ public class Lift extends AbstractMechanic
 	public Lift(final GalibriPlugin plugin)
 	{
 		super(plugin);
-		permissions.put(Perm.INITIALIZE, "lift.create");
-		permissions.put(Perm.DO_ACTION, "lift.use");
+		permissions.put(Perm.INITIALIZE, "galibri.lift.create");
+		permissions.put(Perm.DO_ACTION, "galibri.lift.use");
 	}
 	
 	//---------------------------------------------------------------------------------------------

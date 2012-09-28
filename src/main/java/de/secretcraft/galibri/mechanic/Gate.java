@@ -25,6 +25,7 @@ public class Gate extends AbstractMechanic
 	//---------------------------------------------------------------------------------------------
 	
 	public final static String CONFIG_BLOCKS_PATH = "gate-blocks";
+	public final static String CONFIG_ARCHWAY_BLOCK_PATH = "gate-archway-blocks";
 	public final static String CONFIG_SEARCH_OFFSET = "gate-search-range";
 	
 	//---------------------------------------------------------------------------------------------
@@ -32,8 +33,8 @@ public class Gate extends AbstractMechanic
 	public Gate(final GalibriPlugin plugin)
 	{
 		super(plugin);
-		permissions.put(Perm.INITIALIZE, "gate.create");
-		permissions.put(Perm.DO_ACTION, "gate.use");
+		permissions.put(Perm.INITIALIZE, "galibri.gate.create");
+		permissions.put(Perm.DO_ACTION, "galibri.gate.use");
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -58,9 +59,7 @@ public class Gate extends AbstractMechanic
 			player.sendMessage("no gate blocks found");
 			return false;
 		}
-		
 		toggleGate(topBlocks);
-		
 		return true;
 	}
 	
@@ -83,7 +82,7 @@ public class Gate extends AbstractMechanic
 			for(int xLoc = 0; xLoc < xOff * 2; ++xLoc){
 				for(int zLoc = 0; zLoc < zOff * 2; ++zLoc){
 					Block currentBlock = world.getBlockAt(search.getBlockX() + xLoc, search.getBlockY() - yLoc, search.getBlockZ() + zLoc);
-					if(isGateBlock(currentBlock)) {
+					if(isGateBlock(currentBlock) && isInArchway(currentBlock)) {
 						foundGateBlock = true;
 						back.add(currentBlock);
 					}
@@ -91,7 +90,7 @@ public class Gate extends AbstractMechanic
 			}
 			// do not search in the next area if a gate block was found
 			if(foundGateBlock) break;
-		}		
+		}
 		return back;
 	}
 	
@@ -123,6 +122,14 @@ public class Gate extends AbstractMechanic
 	protected boolean isGateBlock(Block block)
 	{
 		List<Integer> blockList = plugin.getConfig().getIntegerList(CONFIG_BLOCKS_PATH);
+		return blockList.contains(block.getType().getId());
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	protected boolean isInArchway(Block block)
+	{
+		List<Integer> blockList = plugin.getConfig().getIntegerList(CONFIG_ARCHWAY_BLOCK_PATH);
 		return blockList.contains(block.getType().getId());
 	}
 	
