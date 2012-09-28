@@ -88,8 +88,8 @@ public class Gate extends AbstractMechanic
 						back.add(currentBlock);
 					}
 				}
-				if(foundGateBlock) break;
 			}
+			// do not search next area if gate block was found
 			if(foundGateBlock) break;
 		}		
 		return back;
@@ -100,17 +100,20 @@ public class Gate extends AbstractMechanic
 	protected void toggleGate(List<Block> topBlocks)
 	{
 		Material gateMat = topBlocks.get(0).getType();
+		Material toggleMat = null;
 		for(Block block : topBlocks){
 			boolean end = false;
 			while(!end) {
 				block = block.getRelative(BlockFace.DOWN);
 				if(block.getType() == Material.AIR) {
-					block.setType(gateMat);
+					if(toggleMat == null) toggleMat = gateMat;
+					block.setType(toggleMat);
 				} else if(block.getType() == gateMat) {
-					block.setType(Material.AIR);
+					if(toggleMat == null) toggleMat = Material.AIR;
+					block.setType(toggleMat);
 				} else {
 					end = true;
-				}
+				}					
 			}
 		}
 	}
