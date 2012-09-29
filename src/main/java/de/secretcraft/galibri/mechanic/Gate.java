@@ -119,7 +119,7 @@ public class Gate extends AbstractMechanic
 	
 	//---------------------------------------------------------------------------------------------
 	
-	protected boolean isGateBlock(Block block)
+	protected boolean isGateBlock(final Block block)
 	{
 		List<Integer> blockList = plugin.getConfig().getIntegerList(CONFIG_BLOCKS_PATH);
 		return blockList.contains(block.getType().getId());
@@ -127,10 +127,11 @@ public class Gate extends AbstractMechanic
 	
 	//---------------------------------------------------------------------------------------------
 	
-	protected boolean isInArchway(Block block)
+	protected boolean isInArchway(final Block block)
 	{
+		Block onTopOfIt = block.getRelative(BlockFace.UP);
 		List<Integer> blockList = plugin.getConfig().getIntegerList(CONFIG_ARCHWAY_BLOCK_PATH);
-		return blockList.contains(block.getType().getId());
+		return blockList.contains(onTopOfIt.getType().getId());
 	}
 	
 	//---------------------------------------------------------------------------------------------

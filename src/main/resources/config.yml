@@ -1,7 +1,8 @@
+log-level: ''
 gate-search-range:
-   x: 4
-   y: 4
-   z: 4
+  x: 4
+  y: 4
+  z: 4
 gate-blocks:
 - 85
 - 101
