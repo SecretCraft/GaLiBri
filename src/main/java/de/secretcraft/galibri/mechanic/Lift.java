@@ -58,7 +58,7 @@ public class Lift extends AbstractMechanic
 		final BlockFace face = getDirection(sign.getLine(1));
 		if(face == BlockFace.SELF) {
 			// TODO: STH localize
-			player.sendMessage(ChatColor.RED + "You can't departure from this sign");
+			player.sendMessage(ChatColor.RED + "You can't depart from this sign");
 			return false;
 		}
 		Sign destSign = searchForSign(face, sign);
