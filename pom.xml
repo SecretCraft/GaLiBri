@@ -1,8 +1,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.secretcraft</groupId>
-  <artifactId>Galibri</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <name>GaLiBri</name>
+  <artifactId>GaLiBri</artifactId>
+  <version>0.0.2-SNAPSHOT</version>
+  <description>Gate, Lift and Bridge funtionality like FalseBook and CraftsBook but lighweight</description>
+  <url>https://github.com/SecretCraft/GaLiBri</url>
+  <build>
+  	<resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+  </build>
+  <properties> 
+  	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
+  </properties>
   <repositories>
 	<repository>
          <id>repobo-rel</id>
@@ -17,11 +31,4 @@
   		<version>1.3.1-R2.0</version>
 	</dependency>
   </dependencies>
-  <name>Galibri</name>
-  <organization>
-  	<name>Secretcraft</name>
-  	<url>http://www.secretcraft.de</url>
-  </organization>
-  <url>https://github.com/SecretCraft/GaLiBri</url>
-  <description>Gate, Lift and Bridge funtionality like FalseBook and CraftsBook but lighweight</description>
 </project>
