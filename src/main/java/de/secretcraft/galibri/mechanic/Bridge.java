@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 
 import de.secretcraft.galibri.GalibriPlugin;
-import de.secretcraft.galibri.mechanic.AbstractMechanic.Perm;
 
 /**
  * 
@@ -23,8 +22,8 @@ public class Bridge extends AbstractMechanic
 	public Bridge(GalibriPlugin plugin)
 	{
 		super(plugin);
-		permissions.put(Perm.INITIALIZE, "bridge.create");
-		permissions.put(Perm.DO_ACTION, "bridge.use");
+		permissions.put(Perm.INITIALIZE, "galibri.bridge.create");
+		permissions.put(Perm.DO_ACTION, "galibri.bridge.use");
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -32,10 +31,9 @@ public class Bridge extends AbstractMechanic
 	public boolean initialize(SignChangeEvent event)
 	{
 		if(!super.initialize(event)) return false;
-		
-		Player player = event.getPlayer();
-		player.sendMessage("Bridge => initialize "+ player.getName());
-		
+		final Player player = event.getPlayer();
+		event.setLine(1, "[Bridge]");
+		player.sendMessage(event.getLine(1) + " sign created");
 		return true;
 	}
 	
