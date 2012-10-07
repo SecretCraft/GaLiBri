@@ -1,14 +1,26 @@
-log-level: ''
-gate-search-range:
-  x: 4
-  y: 4
-  z: 4
-gate-blocks:
-- 85
-- 101
-- 102
-- 113
-gate-archway-blocks:
-- 1
-- 4
-- 5
+gate:
+  search-range:
+    x: 4
+    y: 4
+    z: 4
+  blocks:
+    - 85
+    - 101
+    - 102
+    - 113
+  archway-blocks:
+    - 1
+    - 4
+    - 5
+    - 35
+    - 17
+    - 98
+bridge:
+  blocks:
+    - 85
+    - 101
+    - 102
+    - 113
+  max-size:
+    width: 3
+    length: 10
