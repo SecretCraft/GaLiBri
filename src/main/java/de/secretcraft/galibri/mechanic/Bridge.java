@@ -81,18 +81,49 @@ public class Bridge extends AbstractMechanic
 			return false;
 		}
 		List<Block> startBlocks = getStartBlocks(sign, maxWidth);
-		if(startBlocks == null){
+		if (startBlocks == null) {
 			player.sendMessage("no bridge blocks found");
 			return false;
 		}
 		int blocksAvailable = Integer.valueOf(sign.getLine(3));
-		if(blocksAvailable == 0) {
-			
-		} else {
-			
+		if(blocksAvailable != Integer.valueOf(partnerSign.getLine(3))) {
+			setSignLine(sign, "0");
+			setSignLine(partnerSign, "0");
+			blocksAvailable = 0;
 		}
-
+		int length = (int) Math.abs(sign.getLocation().distance(partnerSign.getLocation())) - 1;
+		int neededBlocks = length * startBlocks.size();
+		BlockFace face = ((org.bukkit.material.Sign) sign.getData()).getFacing().getOppositeFace();
+		List<Block> bridgeBlocks = null;
+		if (blocksAvailable == 0) {
+			bridgeBlocks = getBridgeBlocks(startBlocks, startBlocks.get(0).getType(), face, length);
+			if(neededBlocks != bridgeBlocks.size()){
+				// TODO: STH localize
+				player.sendMessage("Please build a proper bridge");
+				return false;
+			}
+			setBlockMaterial(bridgeBlocks, Material.AIR);
+			setSignLine(sign, Integer.toString(bridgeBlocks.size()));
+			setSignLine(partnerSign, Integer.toString(bridgeBlocks.size()));
+		} else {
+			bridgeBlocks = getBridgeBlocks(startBlocks, Material.AIR, face, length);
+			if(neededBlocks != bridgeBlocks.size()){
+				player.sendMessage("can not build the bridge");
+				return false;
+			}
+			setBlockMaterial(bridgeBlocks, startBlocks.get(0).getType());
+			setSignLine(sign, "0");
+			setSignLine(partnerSign, "0");
+		}
 		return true;
+	}
+	
+	// ---------------------------------------------------------------------------------------------
+	
+	protected void setSignLine(Sign sign, String lineText)
+	{
+		sign.setLine(3, lineText);
+		sign.update();
 	}
 
 	// ---------------------------------------------------------------------------------------------
@@ -153,51 +184,56 @@ public class Bridge extends AbstractMechanic
 		}
 		return partnerSign;
 	}
-	
+
 	// ---------------------------------------------------------------------------------------------
-	
+
 	protected List<Block> getStartBlocks(final Sign sign, final int maxWidth)
 	{
 		final List<Block> blocks = new ArrayList<Block>();
-		
+
 		Block blockUnderSign = sign.getBlock().getRelative(BlockFace.DOWN);
 		Block blockA = blockUnderSign;
 		Block blockB = blockUnderSign;
-		if(isBridgeBlock(blockUnderSign)) blocks.add(blockUnderSign);
-		else return null;
-		
+		if (isBridgeBlock(blockUnderSign))
+			blocks.add(blockUnderSign);
+		else
+			return null;
+
 		List<BlockFace> faces = getCrossedFaces((org.bukkit.material.Sign) sign.getData());
-		if(faces == null) return null;
-		
-		for(int i = 0;i<maxWidth/2;++i){
+		if (faces == null)
+			return null;
+
+		for (int i = 0; i < maxWidth / 2; ++i) {
 			blockA = blockA.getRelative(faces.get(0));
 			blockB = blockB.getRelative(faces.get(1));
-			
-			if(isBridgeBlock(blockA)) blocks.add(blockA);
-			if(isBridgeBlock(blockB)) blocks.add(blockB);
+
+			if (isBridgeBlock(blockA))
+				blocks.add(blockA);
+			if (isBridgeBlock(blockB))
+				blocks.add(blockB);
 		}
-		
+
 		return blocks;
 	}
-	
+
 	// ---------------------------------------------------------------------------------------------
-	
+
 	protected List<BlockFace> getCrossedFaces(org.bukkit.material.Sign signData)
 	{
 		List<BlockFace> faces = new ArrayList<BlockFace>();
-		switch(signData.getFacing().getOppositeFace()){
-			case NORTH:
-			case SOUTH:
-				faces.add(BlockFace.WEST);
-				faces.add(BlockFace.EAST);
+		switch (signData.getFacing().getOppositeFace()) {
+		case NORTH:
+		case SOUTH:
+			faces.add(BlockFace.WEST);
+			faces.add(BlockFace.EAST);
 			break;
-			case EAST:
-			case WEST:
-				faces.add(BlockFace.NORTH);
-				faces.add(BlockFace.SOUTH);
+		case EAST:
+		case WEST:
+			faces.add(BlockFace.NORTH);
+			faces.add(BlockFace.SOUTH);
 			break;
-			default:
-				return null;
+		default:
+			return null;
 		}
 		return faces;
 	}
@@ -211,17 +247,26 @@ public class Bridge extends AbstractMechanic
 	}
 	
 	// ---------------------------------------------------------------------------------------------
-
-	protected int createBridge(final List<Block> startBlocks, final Material bridgeMat, final BlockFace face, final int length)
+	
+	protected List<Block> getBridgeBlocks(final List<Block> startBlocks, final Material mat, final BlockFace face, final int length)
 	{
-		int blockCount = 0;
-		for(int i=0;i<length;++i) {
-			for(Block currentBlock : startBlocks) {
-				currentBlock.setType(bridgeMat);
+		List<Block> blocks = new ArrayList<Block>();
+		for (Block currentBlock : startBlocks) {
+			for (int i = 0; i < length; ++i) {
 				currentBlock = currentBlock.getRelative(face);
+				if(currentBlock.getType() == mat) blocks.add(currentBlock);
 			}
 		}
-		return blockCount;
+		return blocks;
+	}
+
+	// ---------------------------------------------------------------------------------------------
+
+	protected void setBlockMaterial(final List<Block> blocks, final Material mat)
+	{
+		for (Block currentBlock : blocks) {
+			currentBlock.setType(mat);
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------------
