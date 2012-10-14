@@ -4,6 +4,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.secretcraft.galibri.listener.SignListener;
+import de.secretcraft.galibri.mechanic.Gate;
 
 /**
  * 
@@ -22,7 +23,7 @@ public class GalibriPlugin extends JavaPlugin
 	public void onLoad()
 	{
 		saveDefaultConfig();
-		getLogger().info("Block id ");
+		Gate.reloadConfig(this);
 	}
 	
 	//---------------------------------------------------------------------------------------------	

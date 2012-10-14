@@ -125,14 +125,6 @@ public class Lift extends AbstractMechanic
 	private Location getTeleportLocation(final Location location) throws Exception
 	{
 		Block destBlock = getFloor(location.getBlock().getRelative(BlockFace.DOWN));
-		if(destBlock == null){
-			// TODO: STH localize
-			throw new Exception("no floor found");
-		}
-		if(!isFreeArea(destBlock)){
-			// TODO: STH localize
-			throw new Exception("there is not enough space for you");
-		}
 		location.setY(destBlock.getRelative(BlockFace.UP).getY());
 		return location;
 	}
@@ -144,42 +136,43 @@ public class Lift extends AbstractMechanic
 		// NOTE: STH search for free area to port the player
 		for(int i=0;i<2;++i){
 			block = block.getRelative(BlockFace.UP);
-			Material mat = block.getType();
-			if(mat != Material.AIR && mat != Material.SIGN && mat != Material.SIGN_POST && mat != Material.WALL_SIGN) return false;
+			if(isMassive(block)) return false;
 		}
 		return true;
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private Block getFloor(Block block)
+	private Block getFloor(Block block) throws Exception
 	{
-		// NOTE: STH search for the floor 3 blocks downwards 
-		Block back = null;
-		for(int i = 0; i<3; ++i){
+		// NOTE: STH search for the floor 4 blocks downwards 
+		boolean foundFloor = false;
+		for(int i = 0; i<4; ++i){
 			if(isMassive(block)){
-				back = block;
-				break;
+				foundFloor = true;
+				if(isFreeArea(block))
+					return block;
 			}
 			block = block.getRelative(BlockFace.DOWN);
 		}
-		return back;
+		if(foundFloor)
+			throw new Exception("there is not enough space for you"); // TODO: localize
+		else
+			throw new Exception("no floor found");					  // TODO: localize
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private boolean isMassive(final Block block)
+	public boolean isMassive(final Block block)
 	{
 		// NOTE: STH if something is missing please add
-		Material mat = block.getType();
-		return mat == Material.STONE || mat == Material.WOOD || mat == Material.SAND || mat == Material.SANDSTONE ||
-				mat == Material.BEDROCK || mat == Material.BRICK || mat == Material.COBBLESTONE || mat == Material.WOOL ||
-				mat == Material.DIRT || mat == Material.EMERALD_BLOCK || mat == Material.EMERALD_ORE || mat == Material.GLASS ||
-				mat == Material.GLOWSTONE || mat == Material.GOLD_BLOCK || mat == Material.GOLD_ORE || mat == Material.GRASS ||
-				mat == Material.GRAVEL || mat == Material.ICE || mat == Material.IRON_BLOCK || mat == Material.IRON_ORE ||
-				mat == Material.LAPIS_BLOCK || mat == Material.LAPIS_ORE || mat == Material.NETHER_BRICK || mat == Material.NETHERRACK ||
-				mat == Material.OBSIDIAN || mat == Material.REDSTONE_ORE || mat == Material.SNOW_BLOCK || mat == Material.SOUL_SAND ||
-				mat == Material.DOUBLE_STEP;
+		Material m = block.getType();
+		return !(m == Material.AIR || m == Material.STONE_BUTTON || m == Material.SIGN_POST || m == Material.TORCH ||
+				 m == Material.TRAP_DOOR || m == Material.REDSTONE_TORCH_ON || m == Material.REDSTONE_TORCH_OFF ||
+				 m == Material.REDSTONE || m == Material.REDSTONE_WIRE || m == Material.VINE || m == Material.LADDER ||
+				 m == Material.WALL_SIGN || m == Material.CROPS || block.isLiquid() || m == Material.LEVER ||
+				 m == Material.LONG_GRASS || m == Material.SNOW || m == Material.SUGAR_CANE_BLOCK || m == Material.TRIPWIRE_HOOK || 
+				 m == Material.WOOD_PLATE || m == Material.STONE_PLATE);
 	}
 	
 	//---------------------------------------------------------------------------------------------

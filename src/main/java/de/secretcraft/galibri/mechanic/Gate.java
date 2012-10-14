@@ -12,6 +12,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import de.secretcraft.galibri.GalibriPlugin;
 
@@ -27,6 +28,17 @@ public class Gate extends AbstractMechanic
 	public final static String CONFIG_BLOCKS_PATH = "gate.blocks";
 	public final static String CONFIG_ARCHWAY_BLOCK_PATH = "gate.archway-blocks";
 	public final static String CONFIG_SEARCH_OFFSET = "gate.search-range";
+
+	public static int xOffset = -1;
+	public static int yOffset = -1;
+	public static int zOffset = -1;
+	
+	public static void reloadConfig(final JavaPlugin plugin) {
+		final YamlConfiguration conf = (YamlConfiguration) plugin.getConfig();
+		xOffset = conf.getInt(CONFIG_SEARCH_OFFSET + ".x");
+		yOffset = conf.getInt(CONFIG_SEARCH_OFFSET + ".y");
+		zOffset = conf.getInt(CONFIG_SEARCH_OFFSET + ".z");
+	}
 
 	// ---------------------------------------------------------------------------------------------
 
@@ -67,45 +79,11 @@ public class Gate extends AbstractMechanic
 
 	// ---------------------------------------------------------------------------------------------
 
-	protected List<Block> searchForTopBlocks(Block block)
-	{
-		List<Block> back = new ArrayList<Block>();
-		final YamlConfiguration conf = (YamlConfiguration) plugin.getConfig();
-		final Integer xOff = conf.getInt(CONFIG_SEARCH_OFFSET + ".x");
-		final Integer yOff = conf.getInt(CONFIG_SEARCH_OFFSET + ".y");
-		final Integer zOff = conf.getInt(CONFIG_SEARCH_OFFSET + ".z");
-
-		final Location search = new Location(block.getWorld(), block.getX() - xOff, block.getY() + yOff, block.getZ()
-				- zOff);
-		final World world = block.getWorld();
-
-		boolean foundGateBlock = false;
-
-		for (int yLoc = 0; yLoc < yOff * 2; ++yLoc) {
-			for (int xLoc = 0; xLoc < xOff * 2; ++xLoc) {
-				for (int zLoc = 0; zLoc < zOff * 2; ++zLoc) {
-					Block currentBlock = world.getBlockAt(search.getBlockX() + xLoc, search.getBlockY() - yLoc,
-							search.getBlockZ() + zLoc);
-					if (isGateBlock(currentBlock) && isInArchway(currentBlock)) {
-						foundGateBlock = true;
-						back.add(currentBlock);
-					}
-				}
-			}
-			// do not search in the next area if a gate block was found
-			if (foundGateBlock)
-				break;
-		}
-		return back;
-	}
-
-	// ---------------------------------------------------------------------------------------------
-
 	protected void toggleGate(List<Block> topBlocks)
 	{
-		Material gateMat = topBlocks.get(0).getType();
-		Material toggleMat = null;
 		for (Block block : topBlocks) {
+			Material gateMat = block.getType();
+			Material toggleMat = null;
 			boolean end = false;
 			while (!end) {
 				block = block.getRelative(BlockFace.DOWN);
@@ -126,6 +104,109 @@ public class Gate extends AbstractMechanic
 
 	// ---------------------------------------------------------------------------------------------
 
+	protected List<Block> searchForTopBlocks(Block block)
+	{
+		List<Block> back = new ArrayList<Block>();
+
+		final Integer xOff = xOffset;
+		final Integer yOff = yOffset;
+		final Integer zOff = zOffset;
+
+		final Location search = new Location(block.getWorld(), block.getX() - xOff, block.getY() + yOff, block.getZ()
+				- zOff);
+		final World world = block.getWorld();
+
+		boolean foundGateBlock = false;
+		
+		Block start = null;
+
+		for (int yLoc = 0; yLoc < yOff * 2; ++yLoc) {
+			for (int xLoc = 0; xLoc < xOff * 2; ++xLoc) {
+				for (int zLoc = 0; zLoc < zOff * 2; ++zLoc) {
+					Block currentBlock = world.getBlockAt(search.getBlockX() + xLoc, search.getBlockY() - yLoc,
+							search.getBlockZ() + zLoc);
+					if (isGateTopBlock(currentBlock)) {
+						foundGateBlock = true;
+						start = currentBlock;
+					}
+					// do not search in the next area if a gate block was found
+					if (foundGateBlock) break;
+				}
+				// do not search in the next area if a gate block was found
+				if (foundGateBlock) break;
+			}
+			// do not search in the next area if a gate block was found
+			if (foundGateBlock) break;
+		}
+
+		if(start == null) return back;
+		
+		back.add(start);
+		BlockFace direction = getNextGateTopBlockDirection(start);
+		
+		if(direction == BlockFace.EAST) {
+			Block b = start;
+			for(int i=0;i<30;i++) {
+				b = getNextGateTopBlock(b, BlockFace.EAST);
+				if(b == null) break;
+				back.add(b);
+			}
+			b = start;
+			for(int i=0;i<30;i++) {
+				b = getNextGateTopBlock(b, BlockFace.WEST);
+				if(b == null) break;
+				back.add(b);
+			}
+		}
+		else if(direction == BlockFace.NORTH) {
+			Block b = start;
+			for(int i=0;i<30;i++) {
+				b = getNextGateTopBlock(b, BlockFace.NORTH);
+				if(b == null) break;
+				back.add(b);
+			}
+			b = start;
+			for(int i=0;i<30;i++) {
+				b = getNextGateTopBlock(b, BlockFace.SOUTH);
+				if(b == null) break;
+				back.add(b);
+			}
+		}
+		
+		return back;
+	}
+	
+	// ---------------------------------------------------------------------------------------------
+	
+	protected Block getNextGateTopBlock(final Block src, BlockFace dir) {
+		for(int y=-1;y<=1;y++) {
+			Block test = src.getRelative(dir).getRelative(0, y, 0);
+			if(isGateTopBlock(test))
+				return test;
+		}
+		return null;
+	}
+	
+	// ---------------------------------------------------------------------------------------------
+	
+	protected BlockFace getNextGateTopBlockDirection(final Block src) {
+		if(isGateTopBlock(src.getRelative(BlockFace.EAST)) || isGateTopBlock(src.getRelative(BlockFace.WEST)))
+			return BlockFace.EAST;
+		if(isGateTopBlock(src.getRelative(BlockFace.NORTH)) || isGateTopBlock(src.getRelative(BlockFace.SOUTH)))
+			return BlockFace.NORTH;
+		return BlockFace.SELF;
+	}
+
+	// ---------------------------------------------------------------------------------------------
+
+	protected boolean isGateTopBlock(final Block block)
+	{
+		return isGateBlock(block) && isInArchway(block) &&
+		(isGateBlock(block.getRelative(BlockFace.DOWN)) || block.getRelative(BlockFace.DOWN).getType() == Material.AIR);
+	}
+
+	// ---------------------------------------------------------------------------------------------
+
 	protected boolean isGateBlock(final Block block)
 	{
 		List<Integer> blockList = plugin.getConfig().getIntegerList(CONFIG_BLOCKS_PATH);
@@ -136,9 +217,7 @@ public class Gate extends AbstractMechanic
 
 	protected boolean isInArchway(final Block block)
 	{
-		Block onTopOfIt = block.getRelative(BlockFace.UP);
-		List<Integer> blockList = plugin.getConfig().getIntegerList(CONFIG_ARCHWAY_BLOCK_PATH);
-		return blockList.contains(onTopOfIt.getType().getId());
+		return !isGateBlock(block.getRelative(BlockFace.UP));
 	}
 
 	// ---------------------------------------------------------------------------------------------
