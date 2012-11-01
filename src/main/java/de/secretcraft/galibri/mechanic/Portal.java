@@ -15,8 +15,8 @@ public class Portal extends AbstractMechanic
 	public Portal(GalibriPlugin plugin) 
 	{
 		super(plugin);
-		//permissions.put(Perm.INITIALIZE, "galibri.portal.create");
-		//permissions.put(Perm.DO_ACTION, "galibri.portal.use");
+		permissions.put(Perm.INITIALIZE, "galibri.portal.create");
+		permissions.put(Perm.DO_ACTION, "galibri.portal.use");
 	}
 
 	//---------------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ public class Portal extends AbstractMechanic
 		else
 		{
 			event.setLine(0, "[Error]");
-			player.sendMessage("[Portal] Invalid coordinates.");
+			player.sendMessage(event.getLine(0) + " Invalid coordinates.");
 		}
 		
 		return true;
@@ -48,21 +48,26 @@ public class Portal extends AbstractMechanic
 	{
 		if (validateSign(sign.getLine(1)))
 		{
-			// TODO: Check location..
-			String[] coordinates = sign.getLine(1).split(":");
-			
-			// now teleport player
-			// 0 .. x
-			// 1 .. z
-			// 2 .. y = height!
-			Location newPlayerLocation = new Location(player.getWorld(),
-								  Double.parseDouble(coordinates[0]),
-								  Double.parseDouble(coordinates[2]),
-								  Double.parseDouble(coordinates[1])
-							);
-			
-			player.teleport(newPlayerLocation);
-			
+			try
+			{
+				String[] coordinates = sign.getLine(1).split(":");
+
+				// now teleport player
+				// 0 .. x
+				// 1 .. z
+				// 2 .. y = height!
+				Location newPlayerLocation = new Location(player.getWorld(),
+									  Double.parseDouble(coordinates[0]),
+									  Double.parseDouble(coordinates[2]),
+									  Double.parseDouble(coordinates[1])
+								);
+				newPlayerLocation = getTeleportLocation(newPlayerLocation);
+				player.teleport(newPlayerLocation);
+			}
+			catch(Exception e)
+			{
+				player.sendMessage(sign.getLine(0) + " " + e.getMessage());
+			}
 			return true;
 		}
 		else
@@ -70,7 +75,7 @@ public class Portal extends AbstractMechanic
 			return false;
 		}
 	}
-
+	
 	// ---------------------------------------------------------------------------------------------
 	private boolean validateSign(String coordinateLine)
 	{
@@ -100,7 +105,7 @@ public class Portal extends AbstractMechanic
 		returnValue &= isDouble(z);
 		return returnValue;
 	}
-	
+		
 	//---------------------------------------------------------------------------------------------
 	public boolean isDouble(String input)  
 	{
@@ -114,4 +119,7 @@ public class Portal extends AbstractMechanic
 			return false;  
 		}  
 	}
+	
+	//---------------------------------------------------------------------------------------------
+
 }
