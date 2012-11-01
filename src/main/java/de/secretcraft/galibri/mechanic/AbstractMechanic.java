@@ -53,7 +53,7 @@ public abstract class AbstractMechanic
 				event.getPlayer().sendMessage(ChatColor.RED + "You don't have permissions to do that");
 				event.setLine(1, "[not allowed]");
 				return false;
-			}			
+			}
 		}
 		return true;
 	}

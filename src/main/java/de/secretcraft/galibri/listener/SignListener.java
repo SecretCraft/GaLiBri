@@ -37,7 +37,7 @@ public class SignListener implements Listener
 	public void onSignChange(SignChangeEvent event)
 	{
 		if(event.isCancelled()) return;
-		AbstractMechanic mech = MechanicFactory.getMechanic(event.getLine(1), plugin);
+		AbstractMechanic mech = MechanicFactory.getMechanic(event.getLines(), plugin);
 		if(mech != null){
 			mech.initialize(event);
 		}
@@ -58,8 +58,9 @@ public class SignListener implements Listener
 		
 		Sign sign = (Sign) event.getClickedBlock().getState();
 		
-		AbstractMechanic mech = MechanicFactory.getMechanic(sign.getLine(1), plugin);
-		if(mech != null){
+		AbstractMechanic mech = MechanicFactory.getMechanic(sign.getLines(), plugin);
+		if(mech != null)
+		{
 			mech.doAction(sign, event.getPlayer());
 		}
 	}

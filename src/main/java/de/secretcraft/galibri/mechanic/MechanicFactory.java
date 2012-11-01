@@ -11,12 +11,13 @@ public class MechanicFactory
 {
 	//---------------------------------------------------------------------------------------------
 	
-	public static AbstractMechanic getMechanic(String cmdLine, GalibriPlugin plugin)
+	public static AbstractMechanic getMechanic(String[] values, GalibriPlugin plugin)
 	{
-		String value = cmdLine.toLowerCase();
-		if(value.contains("lift")) return new Lift(plugin);
-		else if(value.contains("gate")) return new Gate(plugin);
-		else if(value.contains("bridge")) return new Bridge(plugin);
+		if (values[1].toLowerCase().contains("lift")) return new Lift(plugin);
+		else if (values[1].toLowerCase().contains("gate")) return new Gate(plugin);
+		else if (values[1].toLowerCase().contains("bridge")) return new Bridge(plugin);
+		else if (values[0].toLowerCase().contains("portal")) return new Portal(plugin);
+		
 		return null;
 	}
 	
