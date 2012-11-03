@@ -3,7 +3,7 @@
   <groupId>de.secretcraft</groupId>
   <name>GaLiBri</name>
   <artifactId>GaLiBri</artifactId>
-  <version>0.0.3-SNAPSHOT</version>
+  <version>0.3</version>
   <description>Gate, Lift and Bridge funtionality like FalseBook and CraftsBook but lighweight</description>
   <url>https://github.com/SecretCraft/GaLiBri</url>
   <build>

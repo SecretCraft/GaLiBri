@@ -23,7 +23,7 @@ public class Portal extends AbstractMechanic
 	@Override
 	public boolean initialize(final SignChangeEvent event)
 	{
-		if (!super.initialize(event))
+		if (!super.initialize(event)) 
 			return false;
 
 		final Player player = event.getPlayer();
@@ -46,6 +46,9 @@ public class Portal extends AbstractMechanic
 	@Override
 	public boolean doAction(final Sign sign, final Player player)
 	{
+		if (!super.doAction(sign, player)) 
+			return false;
+		
 		if (validateSign(sign.getLine(1)))
 		{
 			try
