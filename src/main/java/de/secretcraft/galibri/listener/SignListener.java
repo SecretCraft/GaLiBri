@@ -62,6 +62,7 @@ public class SignListener implements Listener
 		if(mech != null)
 		{
 			mech.doAction(sign, event.getPlayer());
+			event.setCancelled(true);
 		}
 	}
 	
