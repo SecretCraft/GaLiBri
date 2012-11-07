@@ -30,7 +30,8 @@ public class Portal extends AbstractMechanic
 		
 		if (validateSign(event.getLine(1)))
 		{
-			event.setLine(0, "[Portal]");
+			// TODO format sign
+			//event.setLine(0, "[Portal]");
 			player.sendMessage(event.getLine(0) + " Sign created.");	
 		}
 		else
@@ -62,7 +63,9 @@ public class Portal extends AbstractMechanic
 				Location newPlayerLocation = new Location(player.getWorld(),
 									  Double.parseDouble(coordinates[0]),
 									  Double.parseDouble(coordinates[2]),
-									  Double.parseDouble(coordinates[1])
+									  Double.parseDouble(coordinates[1]),
+									  getYawnValue(sign.getLine(0)),
+									  (float)0.0
 								);
 				newPlayerLocation = getTeleportLocation(newPlayerLocation);
 				player.teleport(newPlayerLocation);
@@ -121,6 +124,32 @@ public class Portal extends AbstractMechanic
 		{  
 			return false;  
 		}  
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	public float getYawnValue(String yawnWord)  
+	{
+		// switch with strings won't work with old versions of java
+		if (yawnWord.toLowerCase().contains("north")) 
+		{
+			return (float)180.0;
+		} 
+		if (yawnWord.toLowerCase().contains("east")) 
+		{
+			return (float)270.0;
+		}
+		if (yawnWord.toLowerCase().contains("south")) 
+		{
+			return (float)0.0;
+		}
+		if (yawnWord.toLowerCase().contains("west")) 
+		{
+			return (float)90.0;
+		}
+		else 
+		{
+			return (float)180.0;
+		}
 	}
 	
 	//---------------------------------------------------------------------------------------------
