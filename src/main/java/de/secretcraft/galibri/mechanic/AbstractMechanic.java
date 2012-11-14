@@ -13,6 +13,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 
+import de.secretcraft.galibri.GaLiBriException;
 import de.secretcraft.galibri.GalibriPlugin;
 
 /**
@@ -79,7 +80,7 @@ public abstract class AbstractMechanic
 	
 	//---------------------------------------------------------------------------------------------
 	
-	protected Location getTeleportLocation(final Location location) throws Exception
+	protected Location getTeleportLocation(final Location location) throws GaLiBriException
 	{
 		Block destBlock = getFloor(location.getBlock().getRelative(BlockFace.DOWN));
 		location.setY(destBlock.getRelative(BlockFace.UP).getY());
@@ -100,7 +101,7 @@ public abstract class AbstractMechanic
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private Block getFloor(Block block) throws Exception
+	private Block getFloor(Block block) throws GaLiBriException
 	{
 		// NOTE: STH search for the floor 4 blocks downwards 
 		boolean foundFloor = false;
@@ -113,9 +114,9 @@ public abstract class AbstractMechanic
 			block = block.getRelative(BlockFace.DOWN);
 		}
 		if(foundFloor)
-			throw new Exception("there is not enough space for you"); // TODO: localize
+			throw new GaLiBriException("there is not enough space for you"); // TODO: localize
 		else
-			throw new Exception("no floor found");					  // TODO: localize
+			throw new GaLiBriException("no floor found");					 // TODO: localize
 	}
 	
 	//---------------------------------------------------------------------------------------------

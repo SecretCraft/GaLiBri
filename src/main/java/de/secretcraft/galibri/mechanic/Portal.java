@@ -5,6 +5,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 
+import de.secretcraft.galibri.GaLiBriException;
 import de.secretcraft.galibri.GalibriPlugin;
 
 public class Portal extends AbstractMechanic
@@ -30,8 +31,14 @@ public class Portal extends AbstractMechanic
 		
 		if (validateSign(event.getLine(1)))
 		{
-			// TODO format sign
-			//event.setLine(0, "[Portal]");
+			try {
+				String s = event.getLine(0);
+				event.setLine(0, "[Portal:"+ s.substring(s.indexOf(':')+1, s.indexOf(']'))
+						                       .trim().toLowerCase() +"]");
+			} catch(IndexOutOfBoundsException e) {
+				event.setLine(0, "[Portal]");
+			}
+			
 			player.sendMessage(event.getLine(0) + " Sign created.");	
 		}
 		else
@@ -65,13 +72,12 @@ public class Portal extends AbstractMechanic
 									  Double.parseDouble(coordinates[2]),
 									  Double.parseDouble(coordinates[1]),
 									  getYawnValue(sign.getLine(0)),
-									  (float)0.0
+									  player.getLocation().getPitch()
 								);
 				newPlayerLocation = getTeleportLocation(newPlayerLocation);
 				player.teleport(newPlayerLocation);
 			}
-			catch(Exception e)
-			{
+			catch(GaLiBriException e) {
 				player.sendMessage(sign.getLine(0) + " " + e.getMessage());
 			}
 			return true;
@@ -85,70 +91,49 @@ public class Portal extends AbstractMechanic
 	// ---------------------------------------------------------------------------------------------
 	private boolean validateSign(String coordinateLine)
 	{
-		boolean returnValue = true;
-		
 		String[] coordinates = coordinateLine.split(":");
-		if (coordinates.length == 3)
-		{
-			returnValue &= validateCoordinates(coordinates[0],
-											   coordinates[1],
-											   coordinates[2]);
-		}
-		else
-		{
-			returnValue = false;
-		}
-		
-		return returnValue;
+		return (coordinates.length == 3)
+				? validateCoordinates(coordinates[0], coordinates[1], coordinates[2])
+			    : false;
 	}	
 
 	// ---------------------------------------------------------------------------------------------
-	private boolean validateCoordinates(String x, String y, String z)
+	private boolean validateCoordinates(String x, String z, String y)
 	{
-		boolean returnValue = true;
-		returnValue &= isDouble(x);
-		returnValue &= isDouble(y);
-		returnValue &= isDouble(z);
-		return returnValue;
-	}
-		
-	//---------------------------------------------------------------------------------------------
-	public boolean isDouble(String input)  
-	{
-		try  
-		{  
-			Double.parseDouble(input);  
-			return true;
-		}  
-		catch (Exception ex)  
-		{  
-			return false;  
-		}  
+		try {
+			Double.parseDouble(x);
+			Double.parseDouble(z);
+			return Double.parseDouble(y) >= 0D;
+		} catch(NumberFormatException e) {
+			return false;
+		}
 	}
 	
 	//---------------------------------------------------------------------------------------------
-	public float getYawnValue(String yawnWord)  
+	public float getYawnValue(String line)  
 	{
-		// switch with strings won't work with old versions of java
-		if (yawnWord.toLowerCase().contains("north")) 
-		{
-			return (float)180.0;
-		} 
-		if (yawnWord.toLowerCase().contains("east")) 
-		{
-			return (float)270.0;
-		}
-		if (yawnWord.toLowerCase().contains("south")) 
-		{
-			return (float)0.0;
-		}
-		if (yawnWord.toLowerCase().contains("west")) 
-		{
-			return (float)90.0;
-		}
-		else 
-		{
-			return (float)180.0;
+		try {
+			String str = line.substring(line.indexOf(':')+1, line.indexOf(']')).trim().toLowerCase();
+			// switch with strings won't work with old versions of java
+			if (str.equals("north") || str.equals("norden")) {
+				return 180F;
+			} 
+			if (str.equals("east") || str.equals("osten")) {
+				return 270F;
+			}
+			if (str.equals("south") || str.equals("süden") || str.equals("sueden")) {
+				return 0F;
+			}
+			if (str.equals("west") || str.equals("westen")) {
+				return 90F;
+			}
+			else {
+				return Float.parseFloat(str);
+			}
+		} catch(IndexOutOfBoundsException e) {
+			return 180F;
+		} catch(NumberFormatException e) {
+			return 180F;
 		}
 	}
 	

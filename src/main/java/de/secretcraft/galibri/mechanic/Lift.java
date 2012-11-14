@@ -9,6 +9,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 
+import de.secretcraft.galibri.GaLiBriException;
 import de.secretcraft.galibri.GalibriPlugin;
 
 /**
@@ -73,7 +74,7 @@ public class Lift extends AbstractMechanic
 			location = getTeleportLocation(location);
 			player.teleport(location);
 		}
-		catch(Exception e){
+		catch(GaLiBriException e){
 			player.sendMessage(e.getMessage());
 		}
 		return true;

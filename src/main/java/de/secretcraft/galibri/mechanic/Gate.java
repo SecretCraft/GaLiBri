@@ -70,7 +70,7 @@ public class Gate extends AbstractMechanic
 
 		List<Block> topBlocks = searchForTopBlocks(sign.getBlock());
 		if (topBlocks.size() == 0) {
-			player.sendMessage("no gate blocks found");
+			player.sendMessage("no gate blocks found"); //TODO: localize
 			return false;
 		}
 		toggleGate(topBlocks);
@@ -84,8 +84,7 @@ public class Gate extends AbstractMechanic
 		for (Block block : topBlocks) {
 			Material gateMat = block.getType();
 			Material toggleMat = null;
-			boolean end = false;
-			while (!end) {
+			for(;;) {
 				block = block.getRelative(BlockFace.DOWN);
 				if (block.getType() == Material.AIR) {
 					if (toggleMat == null)
@@ -96,7 +95,7 @@ public class Gate extends AbstractMechanic
 						toggleMat = Material.AIR;
 					block.setType(toggleMat);
 				} else {
-					end = true;
+					break;
 				}
 			}
 		}
@@ -112,34 +111,28 @@ public class Gate extends AbstractMechanic
 		final Integer yOff = yOffset;
 		final Integer zOff = zOffset;
 
-		final Location search = new Location(block.getWorld(), block.getX() - xOff, block.getY() + yOff, block.getZ()
-				- zOff);
+		final Location search = new Location(block.getWorld(), block.getX() - xOff,
+											 block.getY() + yOff, block.getZ() - zOff);
 		final World world = block.getWorld();
-
-		boolean foundGateBlock = false;
 		
 		Block start = null;
 
+		outside:
 		for (int yLoc = 0; yLoc < yOff * 2; ++yLoc) {
 			for (int xLoc = 0; xLoc < xOff * 2; ++xLoc) {
 				for (int zLoc = 0; zLoc < zOff * 2; ++zLoc) {
-					Block currentBlock = world.getBlockAt(search.getBlockX() + xLoc, search.getBlockY() - yLoc,
-							search.getBlockZ() + zLoc);
+					Block currentBlock = world.getBlockAt(search.getBlockX() + xLoc,
+							search.getBlockY() - yLoc, search.getBlockZ() + zLoc);
 					if (isGateTopBlock(currentBlock)) {
-						foundGateBlock = true;
 						start = currentBlock;
+						break outside;
 					}
-					// do not search in the next area if a gate block was found
-					if (foundGateBlock) break;
 				}
-				// do not search in the next area if a gate block was found
-				if (foundGateBlock) break;
 			}
-			// do not search in the next area if a gate block was found
-			if (foundGateBlock) break;
 		}
 
-		if(start == null) return back;
+		if(start == null)
+			return back;
 		
 		back.add(start);
 		BlockFace direction = getNextGateTopBlockDirection(start);
@@ -217,7 +210,7 @@ public class Gate extends AbstractMechanic
 
 	protected boolean isInArchway(final Block block)
 	{
-		return !isGateBlock(block.getRelative(BlockFace.UP));
+		return !isGateBlock(block.getRelative(BlockFace.UP)) && block.getRelative(BlockFace.UP).getType() != Material.AIR;
 	}
 
 	// ---------------------------------------------------------------------------------------------
