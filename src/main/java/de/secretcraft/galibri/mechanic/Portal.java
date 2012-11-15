@@ -1,6 +1,8 @@
 package de.secretcraft.galibri.mechanic;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
@@ -61,16 +63,29 @@ public class Portal extends AbstractMechanic
 		{
 			try
 			{
+				World targetWorld = null;
 				String[] coordinates = sign.getLine(1).split(":");
+				
+				try {
+					if(sign.getLine(3).startsWith("W=")) {
+						targetWorld = Bukkit.getWorld(sign.getLine(3).substring(2).trim());
+						targetWorld.canGenerateStructures();
+					}
+				} catch(Exception e) {
+					targetWorld = player.getWorld();
+				}
+				if(targetWorld == null) {
+					targetWorld = player.getWorld();
+				}
 
 				// now teleport player
 				// 0 .. x
 				// 1 .. z
 				// 2 .. y = height!
-				Location newPlayerLocation = new Location(player.getWorld(),
-									  Double.parseDouble(coordinates[0]),
+				Location newPlayerLocation = new Location(targetWorld,
+									  Double.parseDouble(coordinates[0])+0.5,
 									  Double.parseDouble(coordinates[2]),
-									  Double.parseDouble(coordinates[1]),
+									  Double.parseDouble(coordinates[1])+0.5,
 									  getYawnValue(sign.getLine(0)),
 									  player.getLocation().getPitch()
 								);
