@@ -7,6 +7,10 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 
+import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.onarandombox.MultiverseCore.api.SafeTTeleporter;
+import com.onarandombox.MultiverseCore.enums.TeleportResult;
+
 import de.secretcraft.galibri.GaLiBriException;
 import de.secretcraft.galibri.GalibriPlugin;
 
@@ -14,12 +18,16 @@ public class Portal extends AbstractMechanic
 {
 	//---------------------------------------------------------------------------------------------
 
+	MultiverseCore mvPlugin = null;
+	
 	//---------------------------------------------------------------------------------------------
 	public Portal(GalibriPlugin plugin) 
 	{
 		super(plugin);
 		permissions.put(Perm.INITIALIZE, "galibri.portal.create");
 		permissions.put(Perm.DO_ACTION, "galibri.portal.use");
+		
+		mvPlugin = (MultiverseCore) Bukkit.getPluginManager().getPlugin("Multiverse-Core");
 	}
 
 	//---------------------------------------------------------------------------------------------
@@ -62,18 +70,15 @@ public class Portal extends AbstractMechanic
 		if (validateSign(sign.getLine(1)))
 		{
 			try
-			{
-				World targetWorld = null;
+			{World targetWorld = null;
 				String[] coordinates = sign.getLine(1).split(":");
 				
-				try {
-					if(sign.getLine(3).startsWith("W=")) {
-						targetWorld = Bukkit.getWorld(sign.getLine(3).substring(2).trim());
-						targetWorld.canGenerateStructures();
-					}
-				} catch(Exception e) {
-					targetWorld = player.getWorld();
+				if(sign.getLine(2).startsWith("W=")) {
+					targetWorld = Bukkit.getWorld(sign.getLine(2).substring(2).trim());
+					if(targetWorld == null)
+						throw new GaLiBriException("\"" + sign.getLine(2).substring(2).trim() + "\" not found"); //TODO: localize
 				}
+				
 				if(targetWorld == null) {
 					targetWorld = player.getWorld();
 				}
@@ -90,7 +95,17 @@ public class Portal extends AbstractMechanic
 									  player.getLocation().getPitch()
 								);
 				newPlayerLocation = getTeleportLocation(newPlayerLocation);
-				player.teleport(newPlayerLocation);
+				
+				try {
+					SafeTTeleporter teleporter = mvPlugin.getSafeTTeleporter();
+					TeleportResult res = teleporter.safelyTeleport(Bukkit.getConsoleSender(), player, newPlayerLocation, true);
+					if(res != TeleportResult.SUCCESS) {
+						throw new GaLiBriException("teleport not successfull: " + res.toString()); //TODO: localize
+					}
+				} catch(NullPointerException e) {
+					mvPlugin = (MultiverseCore) Bukkit.getPluginManager().getPlugin("Multiverse-Core");
+					player.teleport(newPlayerLocation);
+				}
 			}
 			catch(GaLiBriException e) {
 				player.sendMessage(sign.getLine(0) + " " + e.getMessage());
