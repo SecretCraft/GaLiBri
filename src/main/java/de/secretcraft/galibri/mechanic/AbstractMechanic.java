@@ -13,8 +13,8 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 
-import de.secretcraft.galibri.GaLiBriException;
 import de.secretcraft.galibri.GalibriPlugin;
+import de.secretcraft.galibri.util.GaLiBriException;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package de.secretcraft.galibri;
+package de.secretcraft.galibri.util;
 
 public class GaLiBriException extends Exception {
 	private static final long serialVersionUID = 938144334229031816L;

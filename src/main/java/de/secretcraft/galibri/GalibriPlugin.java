@@ -5,43 +5,34 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import de.secretcraft.galibri.listener.SignListener;
 import de.secretcraft.galibri.mechanic.Gate;
+import de.secretcraft.galibri.util.Teleporter;
 
 /**
- * 
- * 
- * @author sascha thiel
+ * @author Sascha Thiel<br>
+ * Max Heller
  */
-public class GalibriPlugin extends JavaPlugin
-{	
-	//---------------------------------------------------------------------------------------------
-	
-	
-	
-	//---------------------------------------------------------------------------------------------
-	
+public class GalibriPlugin extends JavaPlugin {
+	private Teleporter tele = new Teleporter();
+
 	@Override
-	public void onLoad()
-	{
+	public void onLoad() {
 		saveDefaultConfig();
 		Gate.reloadConfig(this);
 	}
-	
-	//---------------------------------------------------------------------------------------------	
-	
+
 	@Override
-	public void onEnable()
-	{
+	public void onEnable() {
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new SignListener(this), this);
+		tele.init();
 	}
-	
-	//---------------------------------------------------------------------------------------------
 
 	@Override
-	public void onDisable()
-	{
-		
-	}
+	public void onDisable() {
 
-	//---------------------------------------------------------------------------------------------
+	}
+	
+	public Teleporter getTeleporter() {
+		return tele;
+	}
 }
