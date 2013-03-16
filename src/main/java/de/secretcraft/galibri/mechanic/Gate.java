@@ -39,7 +39,7 @@ public class Gate extends AbstractMechanic
 		offset = new Vector[(xOffset * 2 + 1) * (zOffset * 2 + 1) * (yOffset * 2 + 1)];
 		for(int y = -yOffset; y <= yOffset; y++) {
 			for(int x = -xOffset; x <= xOffset; x++) {
-				for(int z = -zOffset; z <= xOffset; z++) {
+				for(int z = -zOffset; z <= zOffset; z++) {
 					offset[i++] = new Vector(x, y, z);
 				}
 			}
