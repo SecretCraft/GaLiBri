@@ -17,8 +17,8 @@ public class MechanicFactory
 		else if (values[1].toLowerCase().contains("gate")) return new Gate(plugin);
 		else if (values[1].toLowerCase().contains("bridge")) return new Bridge(plugin);
 		else if (values[0].toLowerCase().contains("portal")) return new Portal(plugin);
-		
-		return null;
+		else if (values[0].toLowerCase().contains("buyperms")) return new BuyPerms(plugin);
+		else return null;
 	}
 	
 	//---------------------------------------------------------------------------------------------

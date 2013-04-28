@@ -32,6 +32,8 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="B:/jar/bukkit-1.4.6-R0.3.jar"/>
+	<classpathentry kind="lib" path="B:/jar/Vault.jar"/>
+	<classpathentry kind="lib" path="B:/jar/bukkit-1.5.1-R0.1-20130323.060116-8.jar"/>
+	<classpathentry kind="lib" path="B:/jar/PermissionsEx.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

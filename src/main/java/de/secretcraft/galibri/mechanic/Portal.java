@@ -77,7 +77,7 @@ public class Portal extends AbstractMechanic {
 
 				plugin.getTeleporter().teleport(player, newPlayerLocation);
 			} catch (GaLiBriException e) {
-				player.sendMessage(sign.getLine(0) + " " + e.getMessage());
+				player.sendMessage("[Portal] " + e.getMessage());
 			}
 			return true;
 		} else {

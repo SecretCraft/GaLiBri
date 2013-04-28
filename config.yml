@@ -1,0 +1,32 @@
+gate:
+  search-range:
+    x: 4
+    y: 4
+    z: 4
+  blocks:
+    - 85
+    - 101
+    - 102
+    - 113
+bridge:
+  blocks:
+    - 4
+    - 5
+    - 24
+    - 35
+    - 45
+  max-size:
+    width: 3
+    length: 10
+buyperms:
+  mappings:
+    Bergbau: [mcmmo.skills.mining, mcmmo.ability.mining.*]
+    Holzfaeller: [mcmmo.skills.woodcutting, mcmmo.ability.woodcutting.*]
+    Feldarbeiter: [mcmmo.skills.herbalism, mcmmo.ability.herbalism.*]
+    Archeologe: [mcmmo.skills.excavation, mcmmo.ability.excavation.*]
+    Fischer: [mcmmo.skills.fishing, mcmmo.ability.fishing.*]
+    Unbewaffnet: [mcmmo.skills.unarmed, mcmmo.ability.unarmed.*]
+    Bogenschuetze: [mcmmo.skills.archery, mcmmo.ability.archery.*]
+    Schwertkampf: [mcmmo.skills.swords, mcmmo.ability.swords.*]
+    Axtkampf: [mcmmo.skills.axes, mcmmo.ability.axes.*]
+    Akrobatik: [mcmmo.skills.acrobatics, mcmmo.ability.acrobatics.*]
