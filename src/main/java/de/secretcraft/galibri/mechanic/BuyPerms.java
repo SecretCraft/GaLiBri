@@ -59,6 +59,15 @@ public class BuyPerms extends AbstractMechanic {
 			return false;
 		}
 		
+		String lastLine = sign.getLine(3);
+		if(lastLine.length() > 2 && lastLine.startsWith("[") && lastLine.endsWith("]")) {
+			String extraPerm = lastLine.substring(1, lastLine.length() - 1).toLowerCase();
+			if(!player.hasPermission(permissions.get(Perm.DO_ACTION) + "." + extraPerm)) {
+				player.sendMessage(ChatColor.RED + "You don't have permissions to do that");
+				return false;
+			}
+		}
+		
 		List<String> perms = map.get(sign.getLine(1));
 		if(perms == null) {
 			player.sendMessage("Sorry, but this sign is broken. The permission '" + sign.getLine(1) + "' doesn't exist.");
