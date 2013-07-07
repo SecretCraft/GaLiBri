@@ -1,5 +1,6 @@
 package de.secretcraft.galibri;
 
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -41,5 +42,11 @@ public class GalibriPlugin extends JavaPlugin {
 	
 	public Teleporter getTeleporter() {
 		return tele;
+	}
+
+	public void debug(Player player, String string) {
+		if(player.hasPermission("galibri.debug")) {
+			player.sendMessage(string);
+		}
 	}
 }

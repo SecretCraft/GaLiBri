@@ -61,11 +61,13 @@ public class BuyPerms extends AbstractMechanic {
 		
 		String lastLine = sign.getLine(3);
 		if(lastLine.length() > 2 && lastLine.startsWith("[") && lastLine.endsWith("]")) {
-			String extraPerm = lastLine.substring(1, lastLine.length() - 1).toLowerCase();
-			if(!player.hasPermission(permissions.get(Perm.DO_ACTION) + "." + extraPerm)) {
+			String extraPerm = Perm.DO_ACTION + "." + lastLine.substring(1, lastLine.length() - 1).toLowerCase();
+			plugin.debug(player, "Checking for extraperm " + extraPerm);
+			if(!player.hasPermission(permissions.get(extraPerm))) {
 				player.sendMessage(ChatColor.RED + "You don't have permissions to do that");
 				return false;
 			}
+			plugin.debug(player, "You have the extraperm");
 		}
 		
 		List<String> perms = map.get(sign.getLine(1));
@@ -92,14 +94,15 @@ public class BuyPerms extends AbstractMechanic {
 					PermissionsEx.getUser(player).addPermission(perm);
 				}
 				VaultManager.economy.withdrawPlayer(player.getName(), cost);
+				player.sendMessage("You just bought the permission " + sign.getLine(1));
+				return true;
 			}
 		} catch(NullPointerException npe) {
+			player.sendMessage("Uhh sorry. Please contact an admin, this plugin seems to be broken.");
 			return false;
 		} catch(NumberFormatException nfe) {
 			player.sendMessage("Sorry, but this sign is broken.");
 			return false;
 		}
-		
-		return true;
 	}
 }

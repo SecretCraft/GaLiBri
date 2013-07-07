@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -35,7 +37,8 @@ public class Teleporter {
 			}
 			getSafeTTeleporter = mvPlugin.getClass().getMethod("getSafeTTeleporter");
 			safelyTeleport = getSafeTTeleporter.invoke(mvPlugin).getClass()
-							.getMethod("safelyTeleport");
+							.getMethod("safelyTeleport", CommandSender.class,
+									Entity.class, Location.class, boolean.class);
 			useDefaultTeleport = false;
 		} catch (Exception e) {
 			e.printStackTrace();
